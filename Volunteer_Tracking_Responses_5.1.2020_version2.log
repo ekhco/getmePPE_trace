@@ -1,0 +1,1873 @@
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/christina/Desktop/COVID:Stata Files/Volunteer_Tracking_Responses_5.1.2020_version2.log
+  log type:  text
+ opened on:   2 May 2020, 16:12:27
+
+. 
+end of do-file
+
+. 
+. import excel "/Users/christina/Desktop/COVID:Stata Files/Volunteer_Tracking_Responses_5.1.2020.xlsx", sheet("Form Responses Master") firstrow
+(17 vars, 431 obs)
+
+. do "/var/folders/mf/lcgdl3_15ddfzyldx7b4xl6h0000gn/T//SD07304.000000"
+
+. desc 
+
+Contains data
+  obs:           431                          
+ vars:            17                          
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Timestamp       double  %tc                   Timestamp
+Dateofvolunte~y int     %td..                 Date of volunteer activity:
+YourfullnameP~e str21   %21s                  Your full name (Please try and enter your name the same way each time):
+EmailAddress    str37   %37s                  Email Address
+Youreducation~f str88   %88s                  Your educational institution affiliation:
+Numberofhours~t double  %10.0g                Number of hours volunteered on this date:
+Typeofvolunte~e str32   %32s                  Type of volunteer service:
+Whichorganiza~k str23   %23s                  Which organization were you working with on this date? Select all that apply.
+Categoryofvol~p str117  %117s                 Category of volunteer service (please select all that apply):
+OnlyforDriver~e str3    %9s                   Only for Drivers: During your delivery today, did you follow the Driver Safety G
+Pleaseindicat~o str103  %103s                 Please indicate the locations you visited (select all that apply):
+Duringyourvol~s str165  %165s                 During your volunteer activities on this date, please select any of the followin
+Didyoucomeinc~h str3    %9s                   Did you come in contact with other student volunteers, during your volunteer act
+Ifyouanswered~t str81   %81s                  If you answered yes to the question above, please list the first and last name(s
+Didyouprovide~o str3    %9s                   Did you provided any services for a physician or resident (or other HCW who migh
+P               str210  %210s                 If you answered yes to the question above, please list the physician and residen
+OptionalIfyou~w str567  %567s                 Optional: If you would like to write a brief description of your volunteer activ
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+Sorted by: 
+     Note: Dataset has changed since last saved.
+
+. 
+. ********************************************************************************
+. ****************************** GENERATING NEW VARIABLES ************************
+. ********************************************************************************
+. 
+. /*gen command creates the new variable, and compare command compares the two variables to make sure they are the same */ 
+. 
+. 
+. **** 1 ******
+. /* Did you come into contact with other student volunteers during your volunteer activities on this date, yes or no */ 
+. 
+. gen volunteer_contact = Didyoucomeincontactwithoth
+(370 missing values generated)
+
+. 
+. *checks if the new variable matches the old one 
+. compare volunteer_contact Didyoucomeincontactwithoth
+
+                            count
+---------------------------------
+volunte~t=Didyouc~h            61
+                       ----------
+jointly defined                61
+jointly missing               370
+                       ----------
+total                         431
+
+. 
+. tab volunteer_contact Didyoucomeincontactwithoth
+
+           |    Did you come in
+           |  contact with other
+           |  student volunteers,
+           | during your volunteer
+volunteer_ |          act
+   contact |        No        Yes |     Total
+-----------+----------------------+----------
+        No |        29          0 |        29 
+       Yes |         0         32 |        32 
+-----------+----------------------+----------
+     Total |        29         32 |        61 
+
+. 
+. *another way to check if the new variable matches the old one (output should be 0)
+. count if Didyoucomeincontactwithoth~=volunteer_contact
+  0
+
+. 
+. 
+. 
+. 
+. **** 2 ******
+. /* If you answered yes to the question above, please list the first and last name(s) of the student volunteer(s) you were in close contact with. (NOTE: If 
+> you're a volunteer with CRRT Screening & Support Field Team just put "Screening & Support Field Team" in the text box below). - OPEN TEXT */ 
+. 
+. gen list_volunteer_contact = Ifyouansweredyestothequest
+(399 missing values generated)
+
+. 
+. compare list_volunteer_contact Ifyouansweredyestothequest
+
+                            count
+---------------------------------
+list_vo~t=Ifyouan~t            32
+                       ----------
+jointly defined                32
+jointly missing               399
+                       ----------
+total                         431
+
+. 
+. tab list_volunteer_contact 
+
+                 list_volunteer_contact |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                        1. Ashley Cohen |          1        3.12        3.12
+        1. Ashley Cohen; 2. Alex Tobias |          1        3.12        6.25
+1. Katherine Petrovich; 2. Melissa Hart |          1        3.12        9.38
+           1. Ryan Atkins; 2. Alex Clos |          1        3.12       12.50
+                              Alex Clos |          4       12.50       25.00
+                             Alex Clos  |          2        6.25       31.25
+ Alex Clos, Angela Ray, Rachel Halstrom |          1        3.12       34.38
+         Alyssa Kessel, Sean Hormozian  |          1        3.12       37.50
+Anyone else signed up for the 4/6 PGM.. |          1        3.12       40.62
+                           Ashley Cohen |         10       31.25       71.88
+                          Ashley Cohen; |          1        3.12       75.00
+           Ashley Cohen; Allison Martin |          1        3.12       78.12
+          Ashley Cohen; Lindsay Edwards |          1        3.12       81.25
+Ashley Cohen; Nicole Blum; Lindsay Ed.. |          1        3.12       84.38
+                        Lindsay Edwards |          3        9.38       93.75
+Lindsay Edwards; Ashley Cohen; Alliso.. |          1        3.12       96.88
+Tammy (medical student), Dan (M3 from.. |          1        3.12      100.00
+----------------------------------------+-----------------------------------
+                                  Total |         32      100.00
+
+. 
+. tab Ifyouansweredyestothequest
+
+    If you answered yes to the question |
+  above, please list the first and last |
+                                 name(s |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                        1. Ashley Cohen |          1        3.12        3.12
+        1. Ashley Cohen; 2. Alex Tobias |          1        3.12        6.25
+1. Katherine Petrovich; 2. Melissa Hart |          1        3.12        9.38
+           1. Ryan Atkins; 2. Alex Clos |          1        3.12       12.50
+                              Alex Clos |          4       12.50       25.00
+                             Alex Clos  |          2        6.25       31.25
+ Alex Clos, Angela Ray, Rachel Halstrom |          1        3.12       34.38
+         Alyssa Kessel, Sean Hormozian  |          1        3.12       37.50
+Anyone else signed up for the 4/6 PGM.. |          1        3.12       40.62
+                           Ashley Cohen |         10       31.25       71.88
+                          Ashley Cohen; |          1        3.12       75.00
+           Ashley Cohen; Allison Martin |          1        3.12       78.12
+          Ashley Cohen; Lindsay Edwards |          1        3.12       81.25
+Ashley Cohen; Nicole Blum; Lindsay Ed.. |          1        3.12       84.38
+                        Lindsay Edwards |          3        9.38       93.75
+Lindsay Edwards; Ashley Cohen; Alliso.. |          1        3.12       96.88
+Tammy (medical student), Dan (M3 from.. |          1        3.12      100.00
+----------------------------------------+-----------------------------------
+                                  Total |         32      100.00
+
+. 
+. 
+. **** 3 ******
+. /* Your full name (Please try and enter your name the same way each time) - OPEN TEXT */ 
+. 
+. gen full_name = YourfullnamePleasetryande
+
+. 
+. compare full_name YourfullnamePleasetryande
+
+                            count
+---------------------------------
+full_name=Yourful~e           431
+                       ----------
+jointly defined               431
+                       ----------
+total                         431
+
+. 
+. tab full_name
+
+            full_name |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+            Alex Clos |         18        4.18        4.18
+     Alexander Tobias |         15        3.48        7.66
+   Alexandra Richards |          2        0.46        8.12
+      Alfonso G Gomez |          2        0.46        8.58
+       Allison Martin |         18        4.18       12.76
+           Amrit Deol |          6        1.39       14.15
+      Anisha Gogineni |          8        1.86       16.01
+         Ashley Cohen |         18        4.18       20.19
+       Bradley Leshem |          2        0.46       20.65
+     Chantal Alvarado |          1        0.23       20.88
+       Chloe Lohmeyer |          1        0.23       21.11
+     Christina Khouri |          6        1.39       22.51
+       Danielle Wales |          4        0.93       23.43
+         Dhruval Amin |          4        0.93       24.36
+         Elianna Fred |          6        1.39       25.75
+            Eric Chow |         12        2.78       28.54
+         Eric Swanson |          1        0.23       28.77
+           Evan Sitar |          2        0.46       29.23
+          Grant Lewin |          1        0.23       29.47
+            Jaina Chu |          2        0.46       29.93
+        Janki Thakkar |          1        0.23       30.16
+            Jim Zhang |          1        0.23       30.39
+         Jin-Huon Jou |          2        0.46       30.86
+       Jonathan Foldi |          2        0.46       31.32
+        Jordan Newman |          4        0.93       32.25
+      Justin Dreyfuss |          1        0.23       32.48
+     Karisma Chhabria |          3        0.70       33.18
+          Kiril Kolev |          1        0.23       33.41
+          Kyoko Kohno |          5        1.16       34.57
+          Lauren Gard |          1        0.23       34.80
+     Madison Saunders |          5        1.16       35.96
+        Mallika Modak |          2        0.46       36.43
+          Maria Hanna |          5        1.16       37.59
+           Mario Rako |         13        3.02       40.60
+          Mark Plantz |          4        0.93       41.53
+        Mateusz Tkacz |          1        0.23       41.76
+  Matthew Christensen |         13        3.02       44.78
+         Matthew S So |          1        0.23       45.01
+      Maureen Ikpeama |          1        0.23       45.24
+            May Paing |          6        1.39       46.64
+         Maya McKeown |          1        0.23       46.87
+          Mirage Modi |          2        0.46       47.33
+          Mitchell Le |          5        1.16       48.49
+           Neel Reddy |         10        2.32       50.81
+Nicole Sheikholeslami |          9        2.09       52.90
+         Nikhil Dhall |          4        0.93       53.83
+         Pari Thakkar |          1        0.23       54.06
+         Peter Nesper |         16        3.71       57.77
+          Philip Kwon |          5        1.16       58.93
+ Philip V Papaioannou |         18        4.18       63.11
+      Pragati Mamtora |          4        0.93       64.04
+      Rachel Anderson |          1        0.23       64.27
+     Rachel Silverman |         11        2.55       66.82
+         Rachel Stone |         11        2.55       69.37
+           Rami Elhaj |          1        0.23       69.61
+         Ren Mondesir |          2        0.46       70.07
+           Rya Muller |          5        1.16       71.23
+          Ryan Atkins |          3        0.70       71.93
+            Sam Bonge |          2        0.46       72.39
+   Samantha Maasarani |         14        3.25       75.64
+            Sara Khan |         19        4.41       80.05
+           Sean Greig |          1        0.23       80.28
+       Sean Hormozian |          1        0.23       80.51
+          Sophia Yang |          5        1.16       81.67
+    Stephanie Kaszuba |         28        6.50       88.17
+   Stephaniee Kaszuba |          1        0.23       88.40
+         Trevor Grimm |          2        0.46       88.86
+         Tyler Vajdic |          7        1.62       90.49
+        Tyler Vajdic  |          3        0.70       91.18
+   Victoria Vuckovic  |          4        0.93       92.11
+          Wes Harrell |          1        0.23       92.34
+          Zahra Abbas |          6        1.39       93.74
+         Zayd Chishti |          2        0.46       94.20
+         Zhaoyang Wen |         25        5.80      100.00
+----------------------+-----------------------------------
+                Total |        431      100.00
+
+. 
+. tab YourfullnamePleasetryande  
+
+       Your full name |
+(Please try and enter |
+   your name the same |
+      way each time): |      Freq.     Percent        Cum.
+----------------------+-----------------------------------
+            Alex Clos |         18        4.18        4.18
+     Alexander Tobias |         15        3.48        7.66
+   Alexandra Richards |          2        0.46        8.12
+      Alfonso G Gomez |          2        0.46        8.58
+       Allison Martin |         18        4.18       12.76
+           Amrit Deol |          6        1.39       14.15
+      Anisha Gogineni |          8        1.86       16.01
+         Ashley Cohen |         18        4.18       20.19
+       Bradley Leshem |          2        0.46       20.65
+     Chantal Alvarado |          1        0.23       20.88
+       Chloe Lohmeyer |          1        0.23       21.11
+     Christina Khouri |          6        1.39       22.51
+       Danielle Wales |          4        0.93       23.43
+         Dhruval Amin |          4        0.93       24.36
+         Elianna Fred |          6        1.39       25.75
+            Eric Chow |         12        2.78       28.54
+         Eric Swanson |          1        0.23       28.77
+           Evan Sitar |          2        0.46       29.23
+          Grant Lewin |          1        0.23       29.47
+            Jaina Chu |          2        0.46       29.93
+        Janki Thakkar |          1        0.23       30.16
+            Jim Zhang |          1        0.23       30.39
+         Jin-Huon Jou |          2        0.46       30.86
+       Jonathan Foldi |          2        0.46       31.32
+        Jordan Newman |          4        0.93       32.25
+      Justin Dreyfuss |          1        0.23       32.48
+     Karisma Chhabria |          3        0.70       33.18
+          Kiril Kolev |          1        0.23       33.41
+          Kyoko Kohno |          5        1.16       34.57
+          Lauren Gard |          1        0.23       34.80
+     Madison Saunders |          5        1.16       35.96
+        Mallika Modak |          2        0.46       36.43
+          Maria Hanna |          5        1.16       37.59
+           Mario Rako |         13        3.02       40.60
+          Mark Plantz |          4        0.93       41.53
+        Mateusz Tkacz |          1        0.23       41.76
+  Matthew Christensen |         13        3.02       44.78
+         Matthew S So |          1        0.23       45.01
+      Maureen Ikpeama |          1        0.23       45.24
+            May Paing |          6        1.39       46.64
+         Maya McKeown |          1        0.23       46.87
+          Mirage Modi |          2        0.46       47.33
+          Mitchell Le |          5        1.16       48.49
+           Neel Reddy |         10        2.32       50.81
+Nicole Sheikholeslami |          9        2.09       52.90
+         Nikhil Dhall |          4        0.93       53.83
+         Pari Thakkar |          1        0.23       54.06
+         Peter Nesper |         16        3.71       57.77
+          Philip Kwon |          5        1.16       58.93
+ Philip V Papaioannou |         18        4.18       63.11
+      Pragati Mamtora |          4        0.93       64.04
+      Rachel Anderson |          1        0.23       64.27
+     Rachel Silverman |         11        2.55       66.82
+         Rachel Stone |         11        2.55       69.37
+           Rami Elhaj |          1        0.23       69.61
+         Ren Mondesir |          2        0.46       70.07
+           Rya Muller |          5        1.16       71.23
+          Ryan Atkins |          3        0.70       71.93
+            Sam Bonge |          2        0.46       72.39
+   Samantha Maasarani |         14        3.25       75.64
+            Sara Khan |         19        4.41       80.05
+           Sean Greig |          1        0.23       80.28
+       Sean Hormozian |          1        0.23       80.51
+          Sophia Yang |          5        1.16       81.67
+    Stephanie Kaszuba |         28        6.50       88.17
+   Stephaniee Kaszuba |          1        0.23       88.40
+         Trevor Grimm |          2        0.46       88.86
+         Tyler Vajdic |          7        1.62       90.49
+        Tyler Vajdic  |          3        0.70       91.18
+   Victoria Vuckovic  |          4        0.93       92.11
+          Wes Harrell |          1        0.23       92.34
+          Zahra Abbas |          6        1.39       93.74
+         Zayd Chishti |          2        0.46       94.20
+         Zhaoyang Wen |         25        5.80      100.00
+----------------------+-----------------------------------
+                Total |        431      100.00
+
+. 
+. 
+. **** 4 ******
+. /* Date of volunteer activity */
+. /*
+> gen volunteer_date = Dateofvolunteeractivity
+> 
+> compare volunteer_date Dateofvolunteeractivity
+> 
+> this changes the variable to a different number that is indicative of time since 
+> January 1960 in Stata for some reason, need to figure out how to adjust this,
+> will keep this variable unchanged for now */ 
+. 
+. 
+. **** 5 ******
+. /* Category of volunteer service, please select all that apply - Blood drive participation, delivery or retrieval of supplies, provided clinical services, 
+> provided social services, remote activities */ 
+. 
+. gen volunteer_service_category = Categoryofvolunteerservicep
+(370 missing values generated)
+
+. 
+. compare volunteer_service_category Categoryofvolunteerservicep
+
+                            count
+---------------------------------
+volunte~y=Categor~p            61
+                       ----------
+jointly defined                61
+jointly missing               370
+                       ----------
+total                         431
+
+. 
+. tab volunteer_service_category Categoryofvolunteerservicep
+
+                      | Category of volunteer service (please select all that
+volunteer_service_cat |                        apply):
+                egory | Blood d..  Deliver..  Provide..  Providi..  Remote .. |     Total
+----------------------+-------------------------------------------------------+----------
+Blood drive partici.. |         3          0          0          0          0 |         3 
+Delivery or retriev.. |         0         20          0          0          0 |        20 
+Provided clinical s.. |         0          0          2          0          0 |         2 
+Providing social se.. |         0          0          0          4          0 |         4 
+Remote (at home) ac.. |         0          0          0          0         32 |        32 
+----------------------+-------------------------------------------------------+----------
+                Total |         3         20          2          4         32 |        61 
+
+. 
+. 
+. **** 6 ******
+. /* Your educational institution affiliation (Rosalind Franklin, UIC, Uchicago, Northwestern, etc.) */ 
+. 
+. gen institution_affiliation = Youreducationalinstitutionaff
+
+. 
+. compare institution_affiliation Youreducationalinstitutionaff
+
+                            count
+---------------------------------
+institu~n=Youredu~f           431
+                       ----------
+jointly defined               431
+                       ----------
+total                         431
+
+. 
+. tab institution_affiliation Youreducationalinstitutionaff
+
+institution_affiliati |                             Your educational institution affiliation:
+                   on | Medical..  Medical..  Northwe..  Rosalin..  Rush Un..  The Uni..       UMKC       Umkc  Univers.. |     Total
+----------------------+---------------------------------------------------------------------------------------------------+----------
+Medical Scribe Univ.. |         1          0          0          0          0          0          0          0          0 |         1 
+Medical Scribe at U.. |         0          1          0          0          0          0          0          0          0 |         1 
+Northwestern Univer.. |         0          0         37          0          0          0          0          0          0 |        37 
+Rosalind Franklin U.. |         0          0          0        384          0          0          0          0          0 |       384 
+      Rush University |         0          0          0          0          1          0          0          0          0 |         1 
+The University of C.. |         0          0          0          0          0          2          0          0          0 |         2 
+                 UMKC |         0          0          0          0          0          0          2          0          0 |         2 
+                 Umkc |         0          0          0          0          0          0          0          2          0 |         2 
+University of Illin.. |         0          0          0          0          0          0          0          0          1 |         1 
+----------------------+---------------------------------------------------------------------------------------------------+----------
+                Total |         1          1         37        384          1          2          2          2          1 |       431 
+
+. 
+. 
+. **** 7 ******
+. /* Type in your Email Address */ 
+. 
+. gen email_address = EmailAddress
+
+. 
+. compare email_address EmailAddress
+
+                            count
+---------------------------------
+email_a~s=EmailAd~s           431
+                       ----------
+jointly defined               431
+                       ----------
+total                         431
+
+. 
+. tab email_address
+
+                        email_address |      Freq.     Percent        Cum.
+--------------------------------------+-----------------------------------
+               ChloeEstelle@gmail.com |          1        0.23        0.23
+          Danielle.Wales@my.rfums.org |          4        0.93        1.16
+            Dhruval.amin@my.rfums.org |          4        0.93        2.09
+              Matthew.So@my.rfums.org |          1        0.23        2.32
+      Philip.Papaioannou@my.rfums.org |         18        4.18        6.50
+               alex.clos@my.rfums.org |         18        4.18       10.67
+        alexander.tobias@my.rfums.org |         15        3.48       14.15
+            alexraerichards@gmail.com |          2        0.46       14.62
+          alfonso2.gomez@my.rfums.org |          2        0.46       15.08
+          allison.martin@my.rfums.org |         18        4.18       19.26
+                  amritdeol@gmail.com |          6        1.39       20.65
+         anisha.gogineni@my.rfums.org |          8        1.86       22.51
+            ashley.cohen@my.rfums.org |         18        4.18       26.68
+ bradleyleshem2021@u.northwestern.edu |          2        0.46       27.15
+        chantal.alvarado@my.rfums.org |          1        0.23       27.38
+        christina.khouri@my.rfums.org |          5        1.16       28.54
+        christina.khouri@my.rufms.org |          1        0.23       28.77
+                    ejsitar@gmail.com |          2        0.46       29.23
+            elianna.fred@my.rfums.org |          6        1.39       30.63
+               eric.chow@my.rfums.org |         12        2.78       33.41
+            eric.swanson@my.rfums.org |          1        0.23       33.64
+             grant.lewin@my.rfums.org |          1        0.23       33.87
+               jaina.chu@my.rfums.org |          2        0.46       34.34
+           janki.thakkar@my.rfums.org |          1        0.23       34.57
+               jim.zhang@my.rfums.org |          1        0.23       34.80
+                   jinh.jou@gmail.com |          2        0.46       35.27
+           jonathanfoldi@uchicago.edu |          2        0.46       35.73
+           jordab.newman@my.rfums.org |          1        0.23       35.96
+           jordan.newman@my.rfums.org |          3        0.70       36.66
+         justin.dreyfuss@my.rfums.org |          1        0.23       36.89
+             kiril.kolev@my.rfums.org |          1        0.23       37.12
+                 krchhabria@gmail.com |          3        0.70       37.82
+    kyokokohno2021@u.northwestern.edu |          5        1.16       38.98
+             lauren.gard@my.rfums.org |          1        0.23       39.21
+laurenmondesir2022@u.northwestern.edu |          2        0.46       39.68
+            m-plantz@northwestern.edu |          4        0.93       40.60
+        madison.saunders@my.rfums.org |          5        1.16       41.76
+       mallika.modak@northwestern.edu |          2        0.46       42.23
+         maria.hanna@northwestern.edu |          5        1.16       43.39
+              mario.rako@my.rfums.org |         13        3.02       46.40
+           mateusz.tkacz@my.rfums.org |          1        0.23       46.64
+     matthew.christensen@my.rfums.org |         13        3.02       49.65
+         maureen.ikpeama@my.rfums.org |          1        0.23       49.88
+               may.paing@my.rfums.org |          6        1.39       51.28
+    miragemodi2022@u.northwestern.edu |          2        0.46       51.74
+             mitchell.le@my.rfums.org |          5        1.16       52.90
+                     mmckeow2@uic.edu |          1        0.23       53.13
+        n.sheikholeslami@my.rfums.org |          9        2.09       55.22
+              neel.reddy@my.rfums.org |         10        2.32       57.54
+               nikhildhall1@gmail.com |          4        0.93       58.47
+   parithakkar2022@u.northwestern.edu |          1        0.23       58.70
+            peter.nesper@my.rfums.org |         16        3.71       62.41
+             philip.kwon@my.rfums.org |          5        1.16       63.57
+         pragati.mamtora@my.rfums.org |          4        0.93       64.50
+         rachel.anderson@my.rfums.org |          1        0.23       64.73
+        rachel.silverman@my.rfums.org |         11        2.55       67.29
+            rachel.stone@my.rfums.org |         11        2.55       69.84
+              rami.elhaj@my.rfums.org |          1        0.23       70.07
+     ryamuller2023@u.northwestern.edu |          5        1.16       71.23
+             ryan.atkins@my.rfums.org |          3        0.70       71.93
+               sam.bonge@my.rfums.org |          2        0.46       72.39
+      samantha.maasarani@my.rfums.org |         14        3.25       75.64
+               sara.khan@my.rfums.org |         19        4.41       80.05
+              sean.greig@my.rfums.org |          1        0.23       80.28
+          sean.hormozian@my.rfums.org |          1        0.23       80.51
+            sophia1.yang@my.rfums.org |          5        1.16       81.67
+       stephanie.kaszuba@my.rfums.org |         29        6.73       88.40
+            trevor.grimm@my.rfums.org |          2        0.46       88.86
+            tyler.vajdic@my.rfums.org |         10        2.32       91.18
+       victoria.vuckovic@my.rfums.org |          4        0.93       92.11
+ wesleyharrell2021@u.northwestern.edu |          1        0.23       92.34
+             zahra.abbas@my.rfums.org |          6        1.39       93.74
+   zaydchishti2022@u.northwestern.edu |          2        0.46       94.20
+            zhaoyang.wen@my.rfums.org |         25        5.80      100.00
+--------------------------------------+-----------------------------------
+                                Total |        431      100.00
+
+. 
+. tab EmailAddress 
+
+                        Email Address |      Freq.     Percent        Cum.
+--------------------------------------+-----------------------------------
+               ChloeEstelle@gmail.com |          1        0.23        0.23
+          Danielle.Wales@my.rfums.org |          4        0.93        1.16
+            Dhruval.amin@my.rfums.org |          4        0.93        2.09
+              Matthew.So@my.rfums.org |          1        0.23        2.32
+      Philip.Papaioannou@my.rfums.org |         18        4.18        6.50
+               alex.clos@my.rfums.org |         18        4.18       10.67
+        alexander.tobias@my.rfums.org |         15        3.48       14.15
+            alexraerichards@gmail.com |          2        0.46       14.62
+          alfonso2.gomez@my.rfums.org |          2        0.46       15.08
+          allison.martin@my.rfums.org |         18        4.18       19.26
+                  amritdeol@gmail.com |          6        1.39       20.65
+         anisha.gogineni@my.rfums.org |          8        1.86       22.51
+            ashley.cohen@my.rfums.org |         18        4.18       26.68
+ bradleyleshem2021@u.northwestern.edu |          2        0.46       27.15
+        chantal.alvarado@my.rfums.org |          1        0.23       27.38
+        christina.khouri@my.rfums.org |          5        1.16       28.54
+        christina.khouri@my.rufms.org |          1        0.23       28.77
+                    ejsitar@gmail.com |          2        0.46       29.23
+            elianna.fred@my.rfums.org |          6        1.39       30.63
+               eric.chow@my.rfums.org |         12        2.78       33.41
+            eric.swanson@my.rfums.org |          1        0.23       33.64
+             grant.lewin@my.rfums.org |          1        0.23       33.87
+               jaina.chu@my.rfums.org |          2        0.46       34.34
+           janki.thakkar@my.rfums.org |          1        0.23       34.57
+               jim.zhang@my.rfums.org |          1        0.23       34.80
+                   jinh.jou@gmail.com |          2        0.46       35.27
+           jonathanfoldi@uchicago.edu |          2        0.46       35.73
+           jordab.newman@my.rfums.org |          1        0.23       35.96
+           jordan.newman@my.rfums.org |          3        0.70       36.66
+         justin.dreyfuss@my.rfums.org |          1        0.23       36.89
+             kiril.kolev@my.rfums.org |          1        0.23       37.12
+                 krchhabria@gmail.com |          3        0.70       37.82
+    kyokokohno2021@u.northwestern.edu |          5        1.16       38.98
+             lauren.gard@my.rfums.org |          1        0.23       39.21
+laurenmondesir2022@u.northwestern.edu |          2        0.46       39.68
+            m-plantz@northwestern.edu |          4        0.93       40.60
+        madison.saunders@my.rfums.org |          5        1.16       41.76
+       mallika.modak@northwestern.edu |          2        0.46       42.23
+         maria.hanna@northwestern.edu |          5        1.16       43.39
+              mario.rako@my.rfums.org |         13        3.02       46.40
+           mateusz.tkacz@my.rfums.org |          1        0.23       46.64
+     matthew.christensen@my.rfums.org |         13        3.02       49.65
+         maureen.ikpeama@my.rfums.org |          1        0.23       49.88
+               may.paing@my.rfums.org |          6        1.39       51.28
+    miragemodi2022@u.northwestern.edu |          2        0.46       51.74
+             mitchell.le@my.rfums.org |          5        1.16       52.90
+                     mmckeow2@uic.edu |          1        0.23       53.13
+        n.sheikholeslami@my.rfums.org |          9        2.09       55.22
+              neel.reddy@my.rfums.org |         10        2.32       57.54
+               nikhildhall1@gmail.com |          4        0.93       58.47
+   parithakkar2022@u.northwestern.edu |          1        0.23       58.70
+            peter.nesper@my.rfums.org |         16        3.71       62.41
+             philip.kwon@my.rfums.org |          5        1.16       63.57
+         pragati.mamtora@my.rfums.org |          4        0.93       64.50
+         rachel.anderson@my.rfums.org |          1        0.23       64.73
+        rachel.silverman@my.rfums.org |         11        2.55       67.29
+            rachel.stone@my.rfums.org |         11        2.55       69.84
+              rami.elhaj@my.rfums.org |          1        0.23       70.07
+     ryamuller2023@u.northwestern.edu |          5        1.16       71.23
+             ryan.atkins@my.rfums.org |          3        0.70       71.93
+               sam.bonge@my.rfums.org |          2        0.46       72.39
+      samantha.maasarani@my.rfums.org |         14        3.25       75.64
+               sara.khan@my.rfums.org |         19        4.41       80.05
+              sean.greig@my.rfums.org |          1        0.23       80.28
+          sean.hormozian@my.rfums.org |          1        0.23       80.51
+            sophia1.yang@my.rfums.org |          5        1.16       81.67
+       stephanie.kaszuba@my.rfums.org |         29        6.73       88.40
+            trevor.grimm@my.rfums.org |          2        0.46       88.86
+            tyler.vajdic@my.rfums.org |         10        2.32       91.18
+       victoria.vuckovic@my.rfums.org |          4        0.93       92.11
+ wesleyharrell2021@u.northwestern.edu |          1        0.23       92.34
+             zahra.abbas@my.rfums.org |          6        1.39       93.74
+   zaydchishti2022@u.northwestern.edu |          2        0.46       94.20
+            zhaoyang.wen@my.rfums.org |         25        5.80      100.00
+--------------------------------------+-----------------------------------
+                                Total |        431      100.00
+
+. 
+. 
+. **** 8 ******
+. /* Number of hours volunteered on this date */ 
+. 
+. gen volunteer_hours = Numberofhoursvolunteeredont
+
+. 
+. compare volunteer_hours Numberofhoursvolunteeredont
+
+                                        ---------- difference ----------
+                            count       minimum      average     maximum
+------------------------------------------------------------------------
+volunte~s=Numbero~t           431
+                       ----------
+jointly defined               431             0            0           0
+                       ----------
+total                         431
+
+. 
+. tab volunteer_hours 
+
+volunteer_h |
+       ours |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        .25 |          4        0.93        0.93
+         .5 |         14        3.25        4.18
+        .75 |          3        0.70        4.87
+          1 |        161       37.35       42.23
+        1.5 |          1        0.23       42.46
+          2 |         95       22.04       64.50
+          3 |         32        7.42       71.93
+          4 |         23        5.34       77.26
+          5 |         13        3.02       80.28
+          6 |         25        5.80       86.08
+          7 |          1        0.23       86.31
+          8 |         13        3.02       89.33
+         10 |          8        1.86       91.18
+         12 |         11        2.55       93.74
+         13 |          2        0.46       94.20
+         14 |         10        2.32       96.52
+         16 |         14        3.25       99.77
+         17 |          1        0.23      100.00
+------------+-----------------------------------
+      Total |        431      100.00
+
+. 
+. tab Numberofhoursvolunteeredont
+
+  Number of |
+      hours |
+volunteered |
+    on this |
+      date: |      Freq.     Percent        Cum.
+------------+-----------------------------------
+        .25 |          4        0.93        0.93
+         .5 |         14        3.25        4.18
+        .75 |          3        0.70        4.87
+          1 |        161       37.35       42.23
+        1.5 |          1        0.23       42.46
+          2 |         95       22.04       64.50
+          3 |         32        7.42       71.93
+          4 |         23        5.34       77.26
+          5 |         13        3.02       80.28
+          6 |         25        5.80       86.08
+          7 |          1        0.23       86.31
+          8 |         13        3.02       89.33
+         10 |          8        1.86       91.18
+         12 |         11        2.55       93.74
+         13 |          2        0.46       94.20
+         14 |         10        2.32       96.52
+         16 |         14        3.25       99.77
+         17 |          1        0.23      100.00
+------------+-----------------------------------
+      Total |        431      100.00
+
+. 
+. 
+. 
+. **** 9 ******
+. /* Type of volunteer service: REMOTE (AT HOME) OR COMMUNITY ACTIVITIES */ 
+. 
+. gen remote_community = Typeofvolunteerservice
+
+. 
+. compare remote_community Typeofvolunteerservice
+
+                            count
+---------------------------------
+remote_~y=Typeofv~e           431
+                       ----------
+jointly defined               431
+                       ----------
+total                         431
+
+. 
+. tab remote_community Typeofvolunteerservice
+
+                      |   Type of volunteer
+                      |       service:
+     remote_community | Communi..  Remote .. |     Total
+----------------------+----------------------+----------
+ Community activities |        61          0 |        61 
+Remote (at home) ac.. |         0        370 |       370 
+----------------------+----------------------+----------
+                Total |        61        370 |       431 
+
+. 
+. 
+. **** 10 ******
+. /* Which organization were you working with on this date? - SELECT ALL THAT APPLY */ 
+. 
+. gen organization = Whichorganizationwereyouwork
+(219 missing values generated)
+
+. 
+. compare organization Whichorganizationwereyouwork
+
+                            count
+---------------------------------
+organiz~n=Whichor~k           212
+                       ----------
+jointly defined               212
+jointly missing               219
+                       ----------
+total                         431
+
+. 
+. tab organization Whichorganizationwereyouwork
+
+                      | Which organization were you working with on this date?
+                      |                 Select all that apply.
+         organization | Covid RRT  Covid R..  Vitalan..  Vitalante   getmePPE |     Total
+----------------------+-------------------------------------------------------+----------
+            Covid RRT |        42          0          0          0          0 |        42 
+  Covid RRT, getmePPE |         0         20          0          0          0 |        20 
+Vitalant Blood dona.. |         0          0          1          0          0 |         1 
+            Vitalante |         0          0          0          1          0 |         1 
+             getmePPE |         0          0          0          0        148 |       148 
+----------------------+-------------------------------------------------------+----------
+                Total |        42         20          1          1        148 |       212 
+
+. 
+. 
+. **** 11 ******
+. /* Did you provided any services for a physician or resident (or other HCW who might be in a supervisory grading role if you are a health professions stude
+> nt) during your volunteer activities on this date? - YES OR NO */ 
+. 
+. gen services_HCW = Didyouprovidedanyservicesfo
+(370 missing values generated)
+
+. 
+. compare services_HCW Didyouprovidedanyservicesfo
+
+                            count
+---------------------------------
+service~W=Didyoup~o            61
+                       ----------
+jointly defined                61
+jointly missing               370
+                       ----------
+total                         431
+
+. 
+. tab services_HCW Didyouprovidedanyservicesfo
+
+           | Did you provided any
+           |    services for a
+           | physician or resident
+           |   (or other HCW who
+services_H |         migh
+        CW |        No        Yes |     Total
+-----------+----------------------+----------
+        No |        60          0 |        60 
+       Yes |         0          1 |         1 
+-----------+----------------------+----------
+     Total |        60          1 |        61 
+
+. 
+. 
+. **** 12 ******
+. /* During your volunteer activities on this date, please select any of the following PPEs that you were wearing or had access to, in order to protect yours
+> elf against SARS-CoV-2 exposure: - SELECT ALL ANSWERS THAT APPLY */ 
+. 
+. gen PPE_access = Duringyourvolunteeractivities
+(370 missing values generated)
+
+. 
+. compare PPE_access Duringyourvolunteeractivities
+
+                            count
+---------------------------------
+PPE_acc~s=Duringy~s            61
+                       ----------
+jointly defined                61
+jointly missing               370
+                       ----------
+total                         431
+
+. 
+. tab PPE_access 
+
+                             PPE_access |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+   Disposable face masks (factory made) |          1        1.64        1.64
+Disposable face masks (factory made),.. |         10       16.39       18.03
+Disposable face masks (factory made),.. |          1        1.64       19.67
+Disposable face masks (factory made),.. |          1        1.64       21.31
+Disposable face masks (factory made),.. |          2        3.28       24.59
+       Disposable gloves (factory made) |          2        3.28       27.87
+Goggles / protective eye equipment (f.. |          1        1.64       29.51
+                   Home-made face masks |          3        4.92       34.43
+                 Home-made face shields |          2        3.28       37.70
+                              N95 Masks |          1        1.64       39.34
+N95 Masks, Disposable face masks (fac.. |         13       21.31       60.66
+N95 Masks, Disposable face masks (fac.. |         13       21.31       81.97
+N95 Masks, Disposable gloves (factory.. |          3        4.92       86.89
+N95 Masks, Disposable gloves (factory.. |          1        1.64       88.52
+N95 Masks, Disposable gowns (factory .. |          1        1.64       90.16
+None available, but I did not need ac.. |          4        6.56       96.72
+None available, but I wish I had acce.. |          1        1.64       98.36
+                         hand sanitizer |          1        1.64      100.00
+----------------------------------------+-----------------------------------
+                                  Total |         61      100.00
+
+. 
+. tab Duringyourvolunteeractivities
+
+    During your volunteer activities on |
+    this date, please select any of the |
+                               followin |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+   Disposable face masks (factory made) |          1        1.64        1.64
+Disposable face masks (factory made),.. |         10       16.39       18.03
+Disposable face masks (factory made),.. |          1        1.64       19.67
+Disposable face masks (factory made),.. |          1        1.64       21.31
+Disposable face masks (factory made),.. |          2        3.28       24.59
+       Disposable gloves (factory made) |          2        3.28       27.87
+Goggles / protective eye equipment (f.. |          1        1.64       29.51
+                   Home-made face masks |          3        4.92       34.43
+                 Home-made face shields |          2        3.28       37.70
+                              N95 Masks |          1        1.64       39.34
+N95 Masks, Disposable face masks (fac.. |         13       21.31       60.66
+N95 Masks, Disposable face masks (fac.. |         13       21.31       81.97
+N95 Masks, Disposable gloves (factory.. |          3        4.92       86.89
+N95 Masks, Disposable gloves (factory.. |          1        1.64       88.52
+N95 Masks, Disposable gowns (factory .. |          1        1.64       90.16
+None available, but I did not need ac.. |          4        6.56       96.72
+None available, but I wish I had acce.. |          1        1.64       98.36
+                         hand sanitizer |          1        1.64      100.00
+----------------------------------------+-----------------------------------
+                                  Total |         61      100.00
+
+. 
+. *possibly consider combining some of the answer options here?
+. 
+. 
+. **** 13 ******
+. /* Only for Drivers: During your delivery today, did you follow the Driver Safety Guidelines and Instructions that you were trained with? - YES OR NO */ 
+. 
+. gen driver_safety = OnlyforDriversDuringyourde
+(402 missing values generated)
+
+. 
+. compare driver_safety OnlyforDriversDuringyourde
+
+                            count
+---------------------------------
+driver_~y=Onlyfor~e            29
+                       ----------
+jointly defined                29
+jointly missing               402
+                       ----------
+total                         431
+
+. 
+. tab driver_safety OnlyforDriversDuringyourde
+
+           |   Only for Drivers:
+           | During your delivery
+           | today, did you follow
+driver_saf |  the Driver Safety G
+       ety |        No        Yes |     Total
+-----------+----------------------+----------
+        No |         1          0 |         1 
+       Yes |         0         28 |        28 
+-----------+----------------------+----------
+     Total |         1         28 |        29 
+
+. 
+. 
+. **** 14 ******
+. /* Optional: If you would like to write a brief description of your volunteer activities, for your own records and for possible future credit, please enter
+>  it here - OPEN TEXT */ 
+. 
+. gen volunteer_description = OptionalIfyouwouldliketow 
+(124 missing values generated)
+
+. 
+. compare volunteer_description OptionalIfyouwouldliketow 
+
+                            count
+---------------------------------
+volunte~n=Optiona~w           307
+                       ----------
+jointly defined               307
+jointly missing               124
+                       ----------
+total                         431
+
+. 
+. tab volunteer_description 
+
+                  volunteer_description |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+Began coordinating with Lake County D.. |          1        0.33        0.33
+Blood Drive: Setting up blood drive, .. |          2        0.65        0.98
+                         Blood donation |          1        0.33        1.30
+Blood drive: correspondence, event sc.. |          1        0.33        1.63
+Call to discuss volunteer tracking fo.. |          1        0.33        1.95
+Called Chicago area hotels to inquire.. |          2        0.65        2.61
+Called and emailed several businesses.. |          1        0.33        2.93
+                   Called for donations |          5        1.63        4.56
+              Called/emailed 11 schools |          1        0.33        4.89
+                                Calling |          4        1.30        6.19
+                   Calling and pick-ups |          1        0.33        6.51
+Calling businesses to solicit PPE don.. |          2        0.65        7.17
+                        Calling for PPE |          1        0.33        7.49
+                  Calling for donations |          7        2.28        9.77
+              Calling medical suppliers |          1        0.33       10.10
+           Calling potential ppe donors |          1        0.33       10.42
+Calling, fixing spreadsheets, data mi.. |          1        0.33       10.75
+                                  Calls |          6        1.95       12.70
+                    Calls & data mining |          1        0.33       13.03
+                   Calls for donations. |          1        0.33       13.36
+     Calls to medical supply companies  |          1        0.33       13.68
+Communicated with PPE leaders from ea.. |          1        0.33       14.01
+Communicated with physicians about Ha.. |          1        0.33       14.33
+Community outreach meeting with my ch.. |          1        0.33       14.66
+Compiled list of potential PPE busine.. |          1        0.33       14.98
+Completed data mining for companies w.. |          1        0.33       15.31
+Conference call with IT volunteers an.. |          1        0.33       15.64
+Conference call with data team about .. |          1        0.33       15.96
+Contacted a sewing company -- Peggy Y.. |          1        0.33       16.29
+Contacted two DIY PPE companies to ge.. |          1        0.33       16.61
+Contacted various locations for donat.. |          1        0.33       16.94
+Continued adding schools and universi.. |          1        0.33       17.26
+Continued adding schools and universi.. |          1        0.33       17.59
+Coordinating education/information se.. |          1        0.33       17.92
+                Correspondence, meeting |          1        0.33       18.24
+                           DIY PPE Lead |          2        0.65       18.89
+                           DIY PPE lead |          2        0.65       19.54
+                      DIY PPE, PPE lead |          2        0.65       20.20
+                               DIY lead |          1        0.33       20.52
+                     DIY lead, PPE lead |          2        0.65       21.17
+                     DIY lead, PPE leas |          1        0.33       21.50
+                           DIY ppe lead |          1        0.33       21.82
+                               DIY, PPE |          1        0.33       22.15
+Data - PPE Project: setting up Zapier.. |          1        0.33       22.48
+Data Analysis for PPE team and managi.. |          1        0.33       22.80
+Data Analysis work for PPE team, GetM.. |          1        0.33       23.13
+                            Data Mining |          1        0.33       23.45
+Data Mining for Exterminator companies  |          1        0.33       23.78
+Data Mining: Fire and Mold Remediatio.. |          1        0.33       24.10
+Data Mining: Janitorial (Park Ridge-T.. |          1        0.33       24.43
+                 Data analytics meeting |          1        0.33       24.76
+Data analytics meetings and website d.. |          1        0.33       25.08
+Data entry for Dentistry (highwood - .. |          1        0.33       25.41
+                            Data mining |          8        2.61       28.01
+                           Data mining  |          1        0.33       28.34
+                    Data mining & calls |          1        0.33       28.66
+Data mining and contacting DIY PPE gr.. |          1        0.33       28.99
+Data mining different companies for p.. |          1        0.33       29.32
+Data mining for Dentist business in t.. |          1        0.33       29.64
+                    Data mining for PPE |          3        0.98       30.62
+               Data mining for PPE team |          1        0.33       30.94
+               Data mining for UChicago |          1        0.33       31.27
+Data mining for UChicago, carwashes a.. |          1        0.33       31.60
+Data mining for masonry/stone cutters.. |          1        0.33       31.92
+  Data mining for potential PPE sources |          1        0.33       32.25
+Data mining for the PPE drive - denti.. |          5        1.63       33.88
+                              Data task |          1        0.33       34.20
+Data-mined for possible sources of DI.. |          1        0.33       34.53
+          Data-mined sources of DIY PPE |          1        0.33       34.85
+Data-mining businesses that could pos.. |          1        0.33       35.18
+   Data: meetings and data organization |          1        0.33       35.50
+Data: set up automatic response for P.. |          1        0.33       35.83
+Database mining for the PPE team - wo.. |          1        0.33       36.16
+Database mining for the PPE team - wo.. |          1        0.33       36.48
+                             Datamining |          1        0.33       36.81
+Datamining Stone Cutting/Masonry orga.. |          1        0.33       37.13
+                     Datamining for RFU |          1        0.33       37.46
+                Datamining for UChicago |          1        0.33       37.79
+Delivered a donation. Conference call.. |          1        0.33       38.11
+Discussed Boston Scientific partnersh.. |          1        0.33       38.44
+Discussed updates with other PPE lead.. |          1        0.33       38.76
+Discussed with East Coast PPE head ab.. |          1        0.33       39.09
+                     Diy lead, ppe lead |          1        0.33       39.41
+                           Donate Blood |          1        0.33       39.74
+              Double red blood donation |          1        0.33       40.07
+                    Driving and calling |          1        0.33       40.39
+Drove to pick up and deliver donated .. |          1        0.33       40.72
+                      Education module  |          1        0.33       41.04
+    Email correspondence, data mapping  |          1        0.33       41.37
+    Email correspondence, tech support  |          1        0.33       41.69
+Emailing potential sites for blood dr.. |          1        0.33       42.02
+                          Exec Strategy |          5        1.63       43.65
+                     Exec Strategy team |          1        0.33       43.97
+          Exec planning and phone calls |          1        0.33       44.30
+Experimented with different search en.. |          1        0.33       44.63
+Finding all the veterinarians in my d.. |          1        0.33       44.95
+    Fixing google form response issues  |          1        0.33       45.28
+Follow up and new calls and emails to.. |          1        0.33       45.60
+Helped Ryan Atkins load boxes of supp.. |          1        0.33       45.93
+I am partnered with the Midwest Worke.. |          1        0.33       46.25
+Initial call/meeting about starting a.. |          1        0.33       46.58
+MWA member outreach phoning and organ.. |          1        0.33       46.91
+        Made calls to 10 hotels for PPE |          1        0.33       47.23
+Made calls to construction businesses.. |          1        0.33       47.56
+Made calls to fire and mold remediati.. |          1        0.33       47.88
+   Made calls to ~70 businesses for PPE |          1        0.33       48.21
+Made followup calls and new calls to .. |          1        0.33       48.53
+Made new calls and followups to busin.. |          1        0.33       48.86
+Made phone calls to hotels to solicit.. |          1        0.33       49.19
+Made phone calls to local hotels to a.. |          1        0.33       49.51
+Made phone calls to solicit PPE donat.. |          1        0.33       49.84
+               Maintaining spreadsheets |          1        0.33       50.16
+      Making calls/e-mails to companies |          1        0.33       50.49
+Managed the Covid volunteer log and c.. |          1        0.33       50.81
+                          Mapping Calls |          1        0.33       51.14
+Meeting and data collecting, correspo.. |          1        0.33       51.47
+Meeting with PPE leadership. Replied .. |          1        0.33       51.79
+Meeting, correspondence, data analysis  |          1        0.33       52.12
+Meeting, email correspondence, organi.. |          1        0.33       52.44
+                              Meetings  |          1        0.33       52.77
+Meetings and correspondence, setting .. |          1        0.33       53.09
+Meetings and planning data analysis/i.. |          1        0.33       53.42
+           Meetings are correspondence  |          1        0.33       53.75
+Meetings for the data analysis team, .. |          2        0.65       54.40
+Meetings with the volunteer log team,.. |          1        0.33       54.72
+Mobile Blood Drive planning and recru.. |          1        0.33       55.05
+Monitored volunteer work on business .. |          1        0.33       55.37
+Onboarded new PPE team volunteer and .. |          1        0.33       55.70
+Onboarded new PPE volunteers, reorgan.. |          1        0.33       56.03
+Onboarding new PPE volunteers, organi.. |          1        0.33       56.35
+Organized local nursing home data int.. |          2        0.65       57.00
+Organizing and planning data analysis.. |          1        0.33       57.33
+Organizing/creating structure of orga.. |          8        2.61       59.93
+Orientation, COVID-19 response phone .. |          1        0.33       60.26
+                          PGM screening |          1        0.33       60.59
+                                    PPE |          2        0.65       61.24
+                        PPE Data Mining |          3        0.98       62.21
+PPE Data Mining - Universities/School.. |          1        0.33       62.54
+PPE Data Mining: Universities/Schools.. |          1        0.33       62.87
+                        PPE Data mining |          1        0.33       63.19
+                               PPE Lead |          1        0.33       63.52
+PPE Lead, DIY lead, conference call l.. |          1        0.33       63.84
+                            PPE calling |          2        0.65       64.50
+                           PPE calling  |          1        0.33       64.82
+                              PPE calls |          6        1.95       66.78
+                             PPE calls  |          1        0.33       67.10
+                  PPE calls/data mining |          1        0.33       67.43
+                        PPE data mining |          1        0.33       67.75
+                       PPE data-mining  |          1        0.33       68.08
+                     PPE lead, DIY lead |          1        0.33       68.40
+               PPE pick up and drop off |          1        0.33       68.73
+                            PPE pick-up |          2        0.65       69.38
+                             PPE pickup |          2        0.65       70.03
+               PPE pickup and drop off  |          1        0.33       70.36
+                 PPE solicitation calls |          3        0.98       71.34
+PPE solicitation calls, team Zoom mee.. |          1        0.33       71.66
+                 PPE source data mining |          1        0.33       71.99
+    Packed food boxes at Salvation Army |          1        0.33       72.31
+Participated in conference call with .. |          1        0.33       72.64
+Participated on call with a Med Suppl.. |          1        0.33       72.96
+Participated on conference call with .. |          1        0.33       73.29
+                    Phone Calls for PPE |          1        0.33       73.62
+                            Phone calls |          1        0.33       73.94
+Picked up and dropped off donations t.. |          1        0.33       74.27
+Picked up donation from Highland Park.. |          1        0.33       74.59
+Picked up shipment of 50,000 KN95s fr.. |          1        0.33       74.92
+Picking up donations from South Barri.. |          1        0.33       75.24
+Planning and assigning data analysis .. |          1        0.33       75.57
+                  Planning blood drive. |          1        0.33       75.90
+Planning data analysis tasks, communi.. |          1        0.33       76.22
+         RFU Data Team Kick-off Meeting |          1        0.33       76.55
+   Rauner YMCA Covid-19 Testing/RedCap  |          1        0.33       76.87
+Researched potential in-door and out-.. |          1        0.33       77.20
+Researched, emailed, and called part .. |          1        0.33       77.52
+Responded to volunteer emails, monito.. |          1        0.33       77.85
+Responded to volunteer emails. Discus.. |          1        0.33       78.18
+          Salvation Army - Food packing |          1        0.33       78.50
+          Salvation Army - Packing food |          1        0.33       78.83
+Salvation army crisis center: Prepare.. |          1        0.33       79.15
+                  Second round of calls |          1        0.33       79.48
+             Sofia talked at us on zoom |          1        0.33       79.80
+Solicited Chicagoland companies for a.. |          1        0.33       80.13
+Started emailing locations I am not a.. |          1        0.33       80.46
+Team Data: Correspondence, planning a.. |          1        0.33       80.78
+This is a back log of previously volu.. |          1        0.33       81.11
+Tracked volunteer work and responded .. |          1        0.33       81.43
+Trained new Midwestern student leader.. |          1        0.33       81.76
+Universities/Schools Data Mining - De.. |          1        0.33       82.08
+We had our initial meeting for the RF.. |          1        0.33       82.41
+                                Website |          1        0.33       82.74
+                         Website Design |          1        0.33       83.06
+                    Website Development |          1        0.33       83.39
+                    Website development |          1        0.33       83.71
+Website modifications, leadership mee.. |          1        0.33       84.04
+Worked on organizing data into Stata .. |          1        0.33       84.36
+Worked with Salvation Army Disaster S.. |          1        0.33       84.69
+Working with MWA to call members and .. |          1        0.33       85.02
+Working with MWA to call members to c.. |          1        0.33       85.34
+call dentist offices to request PPE d.. |          1        0.33       85.67
+                                calling |          7        2.28       87.95
+                  calling nursing homes |          1        0.33       88.27
+                                  calls |          2        0.65       88.93
+ calls related to website and education |          1        0.33       89.25
+                    calls to businesses |          2        0.65       89.90
+checked volunteer log entries and sen.. |          1        0.33       90.23
+checked volunteer log entries for err.. |          1        0.33       90.55
+creating and distributing face shield.. |          1        0.33       90.88
+                            data mining |          2        0.65       91.53
+                  data mining (1 entry) |          1        0.33       91.86
+                data mining (3 entries) |          1        0.33       92.18
+                data mining for UIC PPE |          2        0.65       92.83
+               data mining for UofC PPE |          1        0.33       93.16
+data mining for industrial suppliers:.. |          1        0.33       93.49
+data mining for industrial suppliers:.. |          1        0.33       93.81
+         data-mining for DIY PPE groups |          1        0.33       94.14
+dev'ing map of COVID testing sites in.. |          1        0.33       94.46
+                     leadership meeting |          1        0.33       94.79
+made face shields, distribute fabric,.. |          1        0.33       95.11
+mask donation pickup + data mining fo.. |          1        0.33       95.44
+          meet w UIC, expanding system. |          1        0.33       95.77
+meetings dealing w shifting leadership  |          1        0.33       96.09
+                 meetings w UIC faculty |          1        0.33       96.42
+                                 mining |          2        0.65       97.07
+          more R coding for maps, calls |          1        0.33       97.39
+phone calls to local businesses inqui.. |          1        0.33       97.72
+picked up donations at animal hospita.. |          1        0.33       98.05
+reached out to assigned organizations.. |          1        0.33       98.37
+    researched nursing homes in chicago |          1        0.33       98.70
+sadly all calls went to voicemail or .. |          1        0.33       99.02
+                          so many calls |          1        0.33       99.35
+                                testing |          1        0.33       99.67
+wrote some R code, emails about PPE i.. |          1        0.33      100.00
+----------------------------------------+-----------------------------------
+                                  Total |        307      100.00
+
+. 
+. tab OptionalIfyouwouldliketow
+
+ Optional: If you would like to write a |
+    brief description of your volunteer |
+                                  activ |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+Began coordinating with Lake County D.. |          1        0.33        0.33
+Blood Drive: Setting up blood drive, .. |          2        0.65        0.98
+                         Blood donation |          1        0.33        1.30
+Blood drive: correspondence, event sc.. |          1        0.33        1.63
+Call to discuss volunteer tracking fo.. |          1        0.33        1.95
+Called Chicago area hotels to inquire.. |          2        0.65        2.61
+Called and emailed several businesses.. |          1        0.33        2.93
+                   Called for donations |          5        1.63        4.56
+              Called/emailed 11 schools |          1        0.33        4.89
+                                Calling |          4        1.30        6.19
+                   Calling and pick-ups |          1        0.33        6.51
+Calling businesses to solicit PPE don.. |          2        0.65        7.17
+                        Calling for PPE |          1        0.33        7.49
+                  Calling for donations |          7        2.28        9.77
+              Calling medical suppliers |          1        0.33       10.10
+           Calling potential ppe donors |          1        0.33       10.42
+Calling, fixing spreadsheets, data mi.. |          1        0.33       10.75
+                                  Calls |          6        1.95       12.70
+                    Calls & data mining |          1        0.33       13.03
+                   Calls for donations. |          1        0.33       13.36
+     Calls to medical supply companies  |          1        0.33       13.68
+Communicated with PPE leaders from ea.. |          1        0.33       14.01
+Communicated with physicians about Ha.. |          1        0.33       14.33
+Community outreach meeting with my ch.. |          1        0.33       14.66
+Compiled list of potential PPE busine.. |          1        0.33       14.98
+Completed data mining for companies w.. |          1        0.33       15.31
+Conference call with IT volunteers an.. |          1        0.33       15.64
+Conference call with data team about .. |          1        0.33       15.96
+Contacted a sewing company -- Peggy Y.. |          1        0.33       16.29
+Contacted two DIY PPE companies to ge.. |          1        0.33       16.61
+Contacted various locations for donat.. |          1        0.33       16.94
+Continued adding schools and universi.. |          1        0.33       17.26
+Continued adding schools and universi.. |          1        0.33       17.59
+Coordinating education/information se.. |          1        0.33       17.92
+                Correspondence, meeting |          1        0.33       18.24
+                           DIY PPE Lead |          2        0.65       18.89
+                           DIY PPE lead |          2        0.65       19.54
+                      DIY PPE, PPE lead |          2        0.65       20.20
+                               DIY lead |          1        0.33       20.52
+                     DIY lead, PPE lead |          2        0.65       21.17
+                     DIY lead, PPE leas |          1        0.33       21.50
+                           DIY ppe lead |          1        0.33       21.82
+                               DIY, PPE |          1        0.33       22.15
+Data - PPE Project: setting up Zapier.. |          1        0.33       22.48
+Data Analysis for PPE team and managi.. |          1        0.33       22.80
+Data Analysis work for PPE team, GetM.. |          1        0.33       23.13
+                            Data Mining |          1        0.33       23.45
+Data Mining for Exterminator companies  |          1        0.33       23.78
+Data Mining: Fire and Mold Remediatio.. |          1        0.33       24.10
+Data Mining: Janitorial (Park Ridge-T.. |          1        0.33       24.43
+                 Data analytics meeting |          1        0.33       24.76
+Data analytics meetings and website d.. |          1        0.33       25.08
+Data entry for Dentistry (highwood - .. |          1        0.33       25.41
+                            Data mining |          8        2.61       28.01
+                           Data mining  |          1        0.33       28.34
+                    Data mining & calls |          1        0.33       28.66
+Data mining and contacting DIY PPE gr.. |          1        0.33       28.99
+Data mining different companies for p.. |          1        0.33       29.32
+Data mining for Dentist business in t.. |          1        0.33       29.64
+                    Data mining for PPE |          3        0.98       30.62
+               Data mining for PPE team |          1        0.33       30.94
+               Data mining for UChicago |          1        0.33       31.27
+Data mining for UChicago, carwashes a.. |          1        0.33       31.60
+Data mining for masonry/stone cutters.. |          1        0.33       31.92
+  Data mining for potential PPE sources |          1        0.33       32.25
+Data mining for the PPE drive - denti.. |          5        1.63       33.88
+                              Data task |          1        0.33       34.20
+Data-mined for possible sources of DI.. |          1        0.33       34.53
+          Data-mined sources of DIY PPE |          1        0.33       34.85
+Data-mining businesses that could pos.. |          1        0.33       35.18
+   Data: meetings and data organization |          1        0.33       35.50
+Data: set up automatic response for P.. |          1        0.33       35.83
+Database mining for the PPE team - wo.. |          1        0.33       36.16
+Database mining for the PPE team - wo.. |          1        0.33       36.48
+                             Datamining |          1        0.33       36.81
+Datamining Stone Cutting/Masonry orga.. |          1        0.33       37.13
+                     Datamining for RFU |          1        0.33       37.46
+                Datamining for UChicago |          1        0.33       37.79
+Delivered a donation. Conference call.. |          1        0.33       38.11
+Discussed Boston Scientific partnersh.. |          1        0.33       38.44
+Discussed updates with other PPE lead.. |          1        0.33       38.76
+Discussed with East Coast PPE head ab.. |          1        0.33       39.09
+                     Diy lead, ppe lead |          1        0.33       39.41
+                           Donate Blood |          1        0.33       39.74
+              Double red blood donation |          1        0.33       40.07
+                    Driving and calling |          1        0.33       40.39
+Drove to pick up and deliver donated .. |          1        0.33       40.72
+                      Education module  |          1        0.33       41.04
+    Email correspondence, data mapping  |          1        0.33       41.37
+    Email correspondence, tech support  |          1        0.33       41.69
+Emailing potential sites for blood dr.. |          1        0.33       42.02
+                          Exec Strategy |          5        1.63       43.65
+                     Exec Strategy team |          1        0.33       43.97
+          Exec planning and phone calls |          1        0.33       44.30
+Experimented with different search en.. |          1        0.33       44.63
+Finding all the veterinarians in my d.. |          1        0.33       44.95
+    Fixing google form response issues  |          1        0.33       45.28
+Follow up and new calls and emails to.. |          1        0.33       45.60
+Helped Ryan Atkins load boxes of supp.. |          1        0.33       45.93
+I am partnered with the Midwest Worke.. |          1        0.33       46.25
+Initial call/meeting about starting a.. |          1        0.33       46.58
+MWA member outreach phoning and organ.. |          1        0.33       46.91
+        Made calls to 10 hotels for PPE |          1        0.33       47.23
+Made calls to construction businesses.. |          1        0.33       47.56
+Made calls to fire and mold remediati.. |          1        0.33       47.88
+   Made calls to ~70 businesses for PPE |          1        0.33       48.21
+Made followup calls and new calls to .. |          1        0.33       48.53
+Made new calls and followups to busin.. |          1        0.33       48.86
+Made phone calls to hotels to solicit.. |          1        0.33       49.19
+Made phone calls to local hotels to a.. |          1        0.33       49.51
+Made phone calls to solicit PPE donat.. |          1        0.33       49.84
+               Maintaining spreadsheets |          1        0.33       50.16
+      Making calls/e-mails to companies |          1        0.33       50.49
+Managed the Covid volunteer log and c.. |          1        0.33       50.81
+                          Mapping Calls |          1        0.33       51.14
+Meeting and data collecting, correspo.. |          1        0.33       51.47
+Meeting with PPE leadership. Replied .. |          1        0.33       51.79
+Meeting, correspondence, data analysis  |          1        0.33       52.12
+Meeting, email correspondence, organi.. |          1        0.33       52.44
+                              Meetings  |          1        0.33       52.77
+Meetings and correspondence, setting .. |          1        0.33       53.09
+Meetings and planning data analysis/i.. |          1        0.33       53.42
+           Meetings are correspondence  |          1        0.33       53.75
+Meetings for the data analysis team, .. |          2        0.65       54.40
+Meetings with the volunteer log team,.. |          1        0.33       54.72
+Mobile Blood Drive planning and recru.. |          1        0.33       55.05
+Monitored volunteer work on business .. |          1        0.33       55.37
+Onboarded new PPE team volunteer and .. |          1        0.33       55.70
+Onboarded new PPE volunteers, reorgan.. |          1        0.33       56.03
+Onboarding new PPE volunteers, organi.. |          1        0.33       56.35
+Organized local nursing home data int.. |          2        0.65       57.00
+Organizing and planning data analysis.. |          1        0.33       57.33
+Organizing/creating structure of orga.. |          8        2.61       59.93
+Orientation, COVID-19 response phone .. |          1        0.33       60.26
+                          PGM screening |          1        0.33       60.59
+                                    PPE |          2        0.65       61.24
+                        PPE Data Mining |          3        0.98       62.21
+PPE Data Mining - Universities/School.. |          1        0.33       62.54
+PPE Data Mining: Universities/Schools.. |          1        0.33       62.87
+                        PPE Data mining |          1        0.33       63.19
+                               PPE Lead |          1        0.33       63.52
+PPE Lead, DIY lead, conference call l.. |          1        0.33       63.84
+                            PPE calling |          2        0.65       64.50
+                           PPE calling  |          1        0.33       64.82
+                              PPE calls |          6        1.95       66.78
+                             PPE calls  |          1        0.33       67.10
+                  PPE calls/data mining |          1        0.33       67.43
+                        PPE data mining |          1        0.33       67.75
+                       PPE data-mining  |          1        0.33       68.08
+                     PPE lead, DIY lead |          1        0.33       68.40
+               PPE pick up and drop off |          1        0.33       68.73
+                            PPE pick-up |          2        0.65       69.38
+                             PPE pickup |          2        0.65       70.03
+               PPE pickup and drop off  |          1        0.33       70.36
+                 PPE solicitation calls |          3        0.98       71.34
+PPE solicitation calls, team Zoom mee.. |          1        0.33       71.66
+                 PPE source data mining |          1        0.33       71.99
+    Packed food boxes at Salvation Army |          1        0.33       72.31
+Participated in conference call with .. |          1        0.33       72.64
+Participated on call with a Med Suppl.. |          1        0.33       72.96
+Participated on conference call with .. |          1        0.33       73.29
+                    Phone Calls for PPE |          1        0.33       73.62
+                            Phone calls |          1        0.33       73.94
+Picked up and dropped off donations t.. |          1        0.33       74.27
+Picked up donation from Highland Park.. |          1        0.33       74.59
+Picked up shipment of 50,000 KN95s fr.. |          1        0.33       74.92
+Picking up donations from South Barri.. |          1        0.33       75.24
+Planning and assigning data analysis .. |          1        0.33       75.57
+                  Planning blood drive. |          1        0.33       75.90
+Planning data analysis tasks, communi.. |          1        0.33       76.22
+         RFU Data Team Kick-off Meeting |          1        0.33       76.55
+   Rauner YMCA Covid-19 Testing/RedCap  |          1        0.33       76.87
+Researched potential in-door and out-.. |          1        0.33       77.20
+Researched, emailed, and called part .. |          1        0.33       77.52
+Responded to volunteer emails, monito.. |          1        0.33       77.85
+Responded to volunteer emails. Discus.. |          1        0.33       78.18
+          Salvation Army - Food packing |          1        0.33       78.50
+          Salvation Army - Packing food |          1        0.33       78.83
+Salvation army crisis center: Prepare.. |          1        0.33       79.15
+                  Second round of calls |          1        0.33       79.48
+             Sofia talked at us on zoom |          1        0.33       79.80
+Solicited Chicagoland companies for a.. |          1        0.33       80.13
+Started emailing locations I am not a.. |          1        0.33       80.46
+Team Data: Correspondence, planning a.. |          1        0.33       80.78
+This is a back log of previously volu.. |          1        0.33       81.11
+Tracked volunteer work and responded .. |          1        0.33       81.43
+Trained new Midwestern student leader.. |          1        0.33       81.76
+Universities/Schools Data Mining - De.. |          1        0.33       82.08
+We had our initial meeting for the RF.. |          1        0.33       82.41
+                                Website |          1        0.33       82.74
+                         Website Design |          1        0.33       83.06
+                    Website Development |          1        0.33       83.39
+                    Website development |          1        0.33       83.71
+Website modifications, leadership mee.. |          1        0.33       84.04
+Worked on organizing data into Stata .. |          1        0.33       84.36
+Worked with Salvation Army Disaster S.. |          1        0.33       84.69
+Working with MWA to call members and .. |          1        0.33       85.02
+Working with MWA to call members to c.. |          1        0.33       85.34
+call dentist offices to request PPE d.. |          1        0.33       85.67
+                                calling |          7        2.28       87.95
+                  calling nursing homes |          1        0.33       88.27
+                                  calls |          2        0.65       88.93
+ calls related to website and education |          1        0.33       89.25
+                    calls to businesses |          2        0.65       89.90
+checked volunteer log entries and sen.. |          1        0.33       90.23
+checked volunteer log entries for err.. |          1        0.33       90.55
+creating and distributing face shield.. |          1        0.33       90.88
+                            data mining |          2        0.65       91.53
+                  data mining (1 entry) |          1        0.33       91.86
+                data mining (3 entries) |          1        0.33       92.18
+                data mining for UIC PPE |          2        0.65       92.83
+               data mining for UofC PPE |          1        0.33       93.16
+data mining for industrial suppliers:.. |          1        0.33       93.49
+data mining for industrial suppliers:.. |          1        0.33       93.81
+         data-mining for DIY PPE groups |          1        0.33       94.14
+dev'ing map of COVID testing sites in.. |          1        0.33       94.46
+                     leadership meeting |          1        0.33       94.79
+made face shields, distribute fabric,.. |          1        0.33       95.11
+mask donation pickup + data mining fo.. |          1        0.33       95.44
+          meet w UIC, expanding system. |          1        0.33       95.77
+meetings dealing w shifting leadership  |          1        0.33       96.09
+                 meetings w UIC faculty |          1        0.33       96.42
+                                 mining |          2        0.65       97.07
+          more R coding for maps, calls |          1        0.33       97.39
+phone calls to local businesses inqui.. |          1        0.33       97.72
+picked up donations at animal hospita.. |          1        0.33       98.05
+reached out to assigned organizations.. |          1        0.33       98.37
+    researched nursing homes in chicago |          1        0.33       98.70
+sadly all calls went to voicemail or .. |          1        0.33       99.02
+                          so many calls |          1        0.33       99.35
+                                testing |          1        0.33       99.67
+wrote some R code, emails about PPE i.. |          1        0.33      100.00
+----------------------------------------+-----------------------------------
+                                  Total |        307      100.00
+
+. 
+. 
+. 
+. **** 15 ******
+. /* If you answered yes to the question above, please list the physician and resident name, status, specialty, and hospital affiliation (if known). - OPEN T
+> EXT */ 
+. 
+. gen list_services_HCW = P
+(430 missing values generated)
+
+. 
+. compare list_services_HCW P
+
+                            count
+---------------------------------
+list_se~W=P                     1
+                       ----------
+jointly defined                 1
+jointly missing               430
+                       ----------
+total                         431
+
+. 
+. tab list_services_HCW P 
+
+                      |   If you
+                      |  answered
+                      | yes to the
+                      |  question
+                      |   above,
+                      |   please
+                      |  list the
+                      | physician
+                      |    and
+                      |  residen
+    list_services_HCW | Met wit.. |     Total
+----------------------+-----------+----------
+Met with Dr. Kishor.. |         1 |         1 
+----------------------+-----------+----------
+                Total |         1 |         1 
+
+. 
+. 
+. **** 16 ******
+. /* Please indicate the locations you visited (select all that apply): *
+> Please do not enter names, addresses, or phones of members of the community (this is not HIPAA compliant) - SELECT ALL THAT APPLY WITH OPEN TEXT OPTION */ 
+. 
+. gen community_locations = Pleaseindicatethelocationsyo
+(370 missing values generated)
+
+. 
+. compare community_locations Pleaseindicatethelocationsyo
+
+                            count
+---------------------------------
+communi~s=Pleasei~o            61
+                       ----------
+jointly defined                61
+jointly missing               370
+                       ----------
+total                         431
+
+. 
+. tab community_locations 
+
+                    community_locations |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                Community member's home |          4        6.56        6.56
+Community member's home, Grocery stor.. |          2        3.28        9.84
+Community member's home, Healthcare p.. |          1        1.64       11.48
+Community member's home, Healthcare w.. |          2        3.28       14.75
+Community member's home, Healthcare w.. |          2        3.28       18.03
+Community member's home, Healthcare w.. |          1        1.64       19.67
+  Grocery store or other supplies store |         14       22.95       42.62
+Healthcare provision setting (clinical) |          5        8.20       50.82
+Healthcare provision setting (not cli.. |         19       31.15       81.97
+Healthcare provision setting (not cli.. |          1        1.64       83.61
+Healthcare provision setting (not cli.. |          1        1.64       85.25
+               Healthcare worker's home |          3        4.92       90.16
+Healthcare worker's home, Grocery sto.. |          2        3.28       93.44
+Healthcare worker's home, Healthcare .. |          3        4.92       98.36
+Healthcare worker's home, Healthcare .. |          1        1.64      100.00
+----------------------------------------+-----------------------------------
+                                  Total |         61      100.00
+
+. 
+. tab Pleaseindicatethelocationsyo
+
+      Please indicate the locations you |
+       visited (select all that apply): |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                Community member's home |          4        6.56        6.56
+Community member's home, Grocery stor.. |          2        3.28        9.84
+Community member's home, Healthcare p.. |          1        1.64       11.48
+Community member's home, Healthcare w.. |          2        3.28       14.75
+Community member's home, Healthcare w.. |          2        3.28       18.03
+Community member's home, Healthcare w.. |          1        1.64       19.67
+  Grocery store or other supplies store |         14       22.95       42.62
+Healthcare provision setting (clinical) |          5        8.20       50.82
+Healthcare provision setting (not cli.. |         19       31.15       81.97
+Healthcare provision setting (not cli.. |          1        1.64       83.61
+Healthcare provision setting (not cli.. |          1        1.64       85.25
+               Healthcare worker's home |          3        4.92       90.16
+Healthcare worker's home, Grocery sto.. |          2        3.28       93.44
+Healthcare worker's home, Healthcare .. |          3        4.92       98.36
+Healthcare worker's home, Healthcare .. |          1        1.64      100.00
+----------------------------------------+-----------------------------------
+                                  Total |         61      100.00
+
+. 
+. 
+. 
+. 
+. ********************************************************************************
+. ********************************* DATA CHARACTERISTICS *************************
+. ********************************************************************************
+. 
+. /* now will start looking at what the variables are showing us */ 
+. 
+. /* For the epi tracking, it is important that the number of individuals that indicated they had contact with others during their community activity matches
+>  the number of those that then entered names for who they were in contact with */
+. 
+. /* table command instead of tab/tabulate does not cutoff the responses
+> but only gives frequency and not percent and cumulative percent */ 
+. 
+. 
+. 
+. *gives me what Ashley listed as people she came into contact with during her shift 
+. table volunteer_contact if full_name=="Ashley Cohen"
+
+----------------------
+volunteer |
+_contact  |      Freq.
+----------+-----------
+       No |          6
+      Yes |          7
+----------------------
+
+.  
+. *gives me the dates that Ashley Cohen volunteered and listed people she was in contact with 
+. table list_volunteer_contact Dateofvolunteeractivity if full_name=="Ashley Cohen"
+
+--------------------------------------------------------------------------------------------------------------------
+                                       |                         Date of volunteer activity:                        
+                list_volunteer_contact | 31mar2020  01apr2020  02apr2020  03apr2020  04apr2020  05apr2020  06apr2020
+---------------------------------------+----------------------------------------------------------------------------
+          1. Ryan Atkins; 2. Alex Clos |                    1                                                       
+                             Alex Clos |         1                                1                     1          1
+                            Alex Clos  |                               1                                            
+Alex Clos, Angela Ray, Rachel Halstrom |                                                     1                      
+--------------------------------------------------------------------------------------------------------------------
+
+. 
+. *gives me the total number of volunteer hours currently input for Christina 
+. table volunteer_hours if full_name=="Christina Khouri"
+
+----------------------
+volunteer |
+_hours    |      Freq.
+----------+-----------
+        1 |          4
+        2 |          2
+----------------------
+
+. 
+. *gives me the number of hours volunteered on certain dates for Christina 
+. table volunteer_hours Dateofvolunteeractivity if full_name=="Christina Khouri"
+
+----------------------------------------------------------------------------
+volunteer |                   Date of volunteer activity:                   
+_hours    | 24mar2020  30mar2020  31mar2020  01apr2020  02apr2020  04apr2020
+----------+-----------------------------------------------------------------
+        1 |         1          1          1          1                      
+        2 |                                                     1          1
+----------------------------------------------------------------------------
+
+. 
+. * to get an average of hours volunteered afterall 
+. sum volunteer_hours /* sum command used for continuous variables*/
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+volunteer_~s |        431    3.470418      3.9399        .25         17
+
+. 
+. *to get an average of hour volunteered per volunteer 
+. sum volunteer_hours if full_name=="Christina Khouri" 
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+volunteer_~s |          6    1.333333    .5163978          1          2
+
+. 
+. 
+. 
+. ********************************************************************************
+. ********************************* DATA CHECKS **********************************
+. ********************************************************************************
+. 
+. *checks if someone accidentally put in their name wrong twice so we can fix it 
+. table full_name
+
+----------------------------------
+            full_name |      Freq.
+----------------------+-----------
+            Alex Clos |         18
+     Alexander Tobias |         15
+   Alexandra Richards |          2
+      Alfonso G Gomez |          2
+       Allison Martin |         18
+           Amrit Deol |          6
+      Anisha Gogineni |          8
+         Ashley Cohen |         18
+       Bradley Leshem |          2
+     Chantal Alvarado |          1
+       Chloe Lohmeyer |          1
+     Christina Khouri |          6
+       Danielle Wales |          4
+         Dhruval Amin |          4
+         Elianna Fred |          6
+            Eric Chow |         12
+         Eric Swanson |          1
+           Evan Sitar |          2
+          Grant Lewin |          1
+            Jaina Chu |          2
+        Janki Thakkar |          1
+            Jim Zhang |          1
+         Jin-Huon Jou |          2
+       Jonathan Foldi |          2
+        Jordan Newman |          4
+      Justin Dreyfuss |          1
+     Karisma Chhabria |          3
+          Kiril Kolev |          1
+          Kyoko Kohno |          5
+          Lauren Gard |          1
+     Madison Saunders |          5
+        Mallika Modak |          2
+          Maria Hanna |          5
+           Mario Rako |         13
+          Mark Plantz |          4
+        Mateusz Tkacz |          1
+  Matthew Christensen |         13
+         Matthew S So |          1
+      Maureen Ikpeama |          1
+            May Paing |          6
+         Maya McKeown |          1
+          Mirage Modi |          2
+          Mitchell Le |          5
+           Neel Reddy |         10
+Nicole Sheikholeslami |          9
+         Nikhil Dhall |          4
+         Pari Thakkar |          1
+         Peter Nesper |         16
+          Philip Kwon |          5
+ Philip V Papaioannou |         18
+      Pragati Mamtora |          4
+      Rachel Anderson |          1
+     Rachel Silverman |         11
+         Rachel Stone |         11
+           Rami Elhaj |          1
+         Ren Mondesir |          2
+           Rya Muller |          5
+          Ryan Atkins |          3
+            Sam Bonge |          2
+   Samantha Maasarani |         14
+            Sara Khan |         19
+           Sean Greig |          1
+       Sean Hormozian |          1
+          Sophia Yang |          5
+    Stephanie Kaszuba |         28
+   Stephaniee Kaszuba |          1
+         Trevor Grimm |          2
+         Tyler Vajdic |          7
+        Tyler Vajdic  |          3
+   Victoria Vuckovic  |          4
+          Wes Harrell |          1
+          Zahra Abbas |          6
+         Zayd Chishti |          2
+         Zhaoyang Wen |         25
+----------------------------------
+
+. 
+. *check to make sure the dates are all in 2020 otherwise maybe follow-up 
+. table Dateofvolunteeractivity
+
+----------------------
+Date of   |
+volunteer |
+activity: |      Freq.
+----------+-----------
+3/18/2020 |          1
+3/19/2020 |          1
+3/20/2020 |          2
+3/21/2020 |          2
+3/22/2020 |          4
+3/23/2020 |          4
+3/24/2020 |          9
+3/25/2020 |         11
+3/26/2020 |          9
+3/27/2020 |         13
+3/28/2020 |          6
+3/29/2020 |          9
+3/30/2020 |         15
+3/31/2020 |         18
+ 4/1/2020 |         20
+ 4/2/2020 |         12
+ 4/3/2020 |         18
+ 4/4/2020 |          9
+ 4/5/2020 |          9
+ 4/6/2020 |         17
+ 4/7/2020 |         13
+ 4/8/2020 |         12
+ 4/9/2020 |         16
+4/10/2020 |          3
+4/11/2020 |          3
+4/12/2020 |          3
+4/13/2020 |         25
+4/14/2020 |         14
+4/15/2020 |         13
+4/16/2020 |         11
+4/17/2020 |         11
+4/18/2020 |          5
+4/19/2020 |          8
+4/20/2020 |         19
+4/21/2020 |         10
+4/22/2020 |         12
+4/23/2020 |          9
+4/24/2020 |         12
+4/25/2020 |          4
+4/26/2020 |          3
+4/27/2020 |         10
+4/28/2020 |         15
+4/29/2020 |          6
+4/30/2020 |          3
+ 5/1/2020 |          2
+----------------------
+
+. 
+. *check to make sure someone has not put in their email wrong 
+. table email_address
+
+--------------------------------------------------
+                        email_address |      Freq.
+--------------------------------------+-----------
+               ChloeEstelle@gmail.com |          1
+          Danielle.Wales@my.rfums.org |          4
+            Dhruval.amin@my.rfums.org |          4
+              Matthew.So@my.rfums.org |          1
+      Philip.Papaioannou@my.rfums.org |         18
+               alex.clos@my.rfums.org |         18
+        alexander.tobias@my.rfums.org |         15
+            alexraerichards@gmail.com |          2
+          alfonso2.gomez@my.rfums.org |          2
+          allison.martin@my.rfums.org |         18
+                  amritdeol@gmail.com |          6
+         anisha.gogineni@my.rfums.org |          8
+            ashley.cohen@my.rfums.org |         18
+ bradleyleshem2021@u.northwestern.edu |          2
+        chantal.alvarado@my.rfums.org |          1
+        christina.khouri@my.rfums.org |          5
+        christina.khouri@my.rufms.org |          1
+                    ejsitar@gmail.com |          2
+            elianna.fred@my.rfums.org |          6
+               eric.chow@my.rfums.org |         12
+            eric.swanson@my.rfums.org |          1
+             grant.lewin@my.rfums.org |          1
+               jaina.chu@my.rfums.org |          2
+           janki.thakkar@my.rfums.org |          1
+               jim.zhang@my.rfums.org |          1
+                   jinh.jou@gmail.com |          2
+           jonathanfoldi@uchicago.edu |          2
+           jordab.newman@my.rfums.org |          1
+           jordan.newman@my.rfums.org |          3
+         justin.dreyfuss@my.rfums.org |          1
+             kiril.kolev@my.rfums.org |          1
+                 krchhabria@gmail.com |          3
+    kyokokohno2021@u.northwestern.edu |          5
+             lauren.gard@my.rfums.org |          1
+laurenmondesir2022@u.northwestern.edu |          2
+            m-plantz@northwestern.edu |          4
+        madison.saunders@my.rfums.org |          5
+       mallika.modak@northwestern.edu |          2
+         maria.hanna@northwestern.edu |          5
+              mario.rako@my.rfums.org |         13
+           mateusz.tkacz@my.rfums.org |          1
+     matthew.christensen@my.rfums.org |         13
+         maureen.ikpeama@my.rfums.org |          1
+               may.paing@my.rfums.org |          6
+    miragemodi2022@u.northwestern.edu |          2
+             mitchell.le@my.rfums.org |          5
+                     mmckeow2@uic.edu |          1
+        n.sheikholeslami@my.rfums.org |          9
+              neel.reddy@my.rfums.org |         10
+               nikhildhall1@gmail.com |          4
+   parithakkar2022@u.northwestern.edu |          1
+            peter.nesper@my.rfums.org |         16
+             philip.kwon@my.rfums.org |          5
+         pragati.mamtora@my.rfums.org |          4
+         rachel.anderson@my.rfums.org |          1
+        rachel.silverman@my.rfums.org |         11
+            rachel.stone@my.rfums.org |         11
+              rami.elhaj@my.rfums.org |          1
+     ryamuller2023@u.northwestern.edu |          5
+             ryan.atkins@my.rfums.org |          3
+               sam.bonge@my.rfums.org |          2
+      samantha.maasarani@my.rfums.org |         14
+               sara.khan@my.rfums.org |         19
+              sean.greig@my.rfums.org |          1
+          sean.hormozian@my.rfums.org |          1
+            sophia1.yang@my.rfums.org |          5
+       stephanie.kaszuba@my.rfums.org |         29
+            trevor.grimm@my.rfums.org |          2
+            tyler.vajdic@my.rfums.org |         10
+       victoria.vuckovic@my.rfums.org |          4
+ wesleyharrell2021@u.northwestern.edu |          1
+             zahra.abbas@my.rfums.org |          6
+   zaydchishti2022@u.northwestern.edu |          2
+            zhaoyang.wen@my.rfums.org |         25
+--------------------------------------------------
+
+. 
+. *things that should match up
+. * 1 - the number of people who indicate yes on contact with others and then the number of responses we have for list_volunteer_contact
+. 
+. tab volunteer_contact 
+
+volunteer_c |
+     ontact |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         No |         29       47.54       47.54
+        Yes |         32       52.46      100.00
+------------+-----------------------------------
+      Total |         61      100.00
+
+. tab list_volunteer_contact
+
+                 list_volunteer_contact |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                        1. Ashley Cohen |          1        3.12        3.12
+        1. Ashley Cohen; 2. Alex Tobias |          1        3.12        6.25
+1. Katherine Petrovich; 2. Melissa Hart |          1        3.12        9.38
+           1. Ryan Atkins; 2. Alex Clos |          1        3.12       12.50
+                              Alex Clos |          4       12.50       25.00
+                             Alex Clos  |          2        6.25       31.25
+ Alex Clos, Angela Ray, Rachel Halstrom |          1        3.12       34.38
+         Alyssa Kessel, Sean Hormozian  |          1        3.12       37.50
+Anyone else signed up for the 4/6 PGM.. |          1        3.12       40.62
+                           Ashley Cohen |         10       31.25       71.88
+                          Ashley Cohen; |          1        3.12       75.00
+           Ashley Cohen; Allison Martin |          1        3.12       78.12
+          Ashley Cohen; Lindsay Edwards |          1        3.12       81.25
+Ashley Cohen; Nicole Blum; Lindsay Ed.. |          1        3.12       84.38
+                        Lindsay Edwards |          3        9.38       93.75
+Lindsay Edwards; Ashley Cohen; Alliso.. |          1        3.12       96.88
+Tammy (medical student), Dan (M3 from.. |          1        3.12      100.00
+----------------------------------------+-----------------------------------
+                                  Total |         32      100.00
+
+. 
+. 
+end of do-file
+
+. exit, clear
